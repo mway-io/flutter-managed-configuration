@@ -55,7 +55,7 @@ class ManagedConfigurationsPlugin : FlutterPlugin, MethodCallHandler, ActivityAw
             flutterPluginBinding.applicationContext.registerReceiver(
                 restrictionsReceiver,
                 IntentFilter(Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED),
-                Context.RECEIVER_EXPORTED
+                Context.RECEIVER_NOT_EXPORTED
             )
         } else {
             flutterPluginBinding.applicationContext.registerReceiver(
