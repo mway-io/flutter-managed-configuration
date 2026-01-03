@@ -21,7 +21,7 @@ import java.util.List;
 
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.util.Pair;
+import androidx.core.util.Pair;
 
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
