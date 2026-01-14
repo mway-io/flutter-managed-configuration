@@ -16,6 +16,9 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 
 /** ManagedConfigurationsPlugin */
@@ -26,6 +29,7 @@ class ManagedConfigurationsPlugin : FlutterPlugin, MethodCallHandler, ActivityAw
     private var context: Context? = null
     private val gson = GsonBuilder().registerTypeAdapterFactory(BundleTypeAdapterFactory())
         .create()
+    private val executor = Executors.newSingleThreadExecutor()
 
     private var reporter: KeyedAppStatesReporter? = null
 
@@ -60,6 +64,7 @@ class ManagedConfigurationsPlugin : FlutterPlugin, MethodCallHandler, ActivityAw
         channel?.setMethodCallHandler(null)
         eventChannel?.setStreamHandler(null)
         flutterPluginBinding.applicationContext.unregisterReceiver(restrictionsReceiver)
+        executor.shutdown()
     }
 
     override fun onAttachedToActivity(activityPluginBinding: ActivityPluginBinding) {
@@ -117,18 +122,64 @@ class ManagedConfigurationsPlugin : FlutterPlugin, MethodCallHandler, ActivityAw
 
     private val restrictionsReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            try {
-                eventSink?.success(getApplicationRestrictions())
-            } catch (e: Exception) {
-                eventSink?.error("restrictionsReceiver", e.message, Log.getStackTraceString(e))
-            }
+            getApplicationRestrictionsAsync(
+                onSuccess = { result ->
+                    eventSink?.success(result)
+                },
+                onError = { e ->
+                    eventSink?.error("restrictionsReceiver", e.message, Log.getStackTraceString(e))
+                }
+            )
         }
     }
 
     private fun getApplicationRestrictions(): String {
-        val restrictionManager =
-            context!!.getSystemService(Context.RESTRICTIONS_SERVICE) as RestrictionsManager
-        val applicationRestrictions = restrictionManager.applicationRestrictions
-        return gson.toJson(applicationRestrictions).toString()
+        // Move both RestrictionsManager call and JSON serialization to background thread
+        // to avoid StrictMode violations (RestrictionsManager.getApplicationRestrictions performs I/O)
+        val latch = CountDownLatch(1)
+        var result: String? = null
+        var exception: Exception? = null
+        val contextRef = context
+        
+        executor.execute {
+            try {
+                val restrictionManager =
+                    contextRef!!.getSystemService(Context.RESTRICTIONS_SERVICE) as RestrictionsManager
+                val applicationRestrictions = restrictionManager.applicationRestrictions
+                result = gson.toJson(applicationRestrictions).toString()
+            } catch (e: Exception) {
+                exception = e
+            } finally {
+                latch.countDown()
+            }
+        }
+        
+        try {
+            latch.await(5, TimeUnit.SECONDS)
+        } catch (e: InterruptedException) {
+            throw RuntimeException("Interrupted while getting restrictions", e)
+        }
+        
+        exception?.let { throw it }
+        return result ?: throw RuntimeException("Failed to get restrictions")
+    }
+    
+    private fun getApplicationRestrictionsAsync(
+        onSuccess: (String) -> Unit,
+        onError: (Exception) -> Unit
+    ) {
+        val contextRef = context
+        
+        executor.execute {
+            try {
+                val restrictionManager =
+                    contextRef!!.getSystemService(Context.RESTRICTIONS_SERVICE) as RestrictionsManager
+                val applicationRestrictions = restrictionManager.applicationRestrictions
+                val result = gson.toJson(applicationRestrictions).toString()
+                onSuccess(result)
+            } catch (e: Exception) {
+                onError(e)
+            }
+        }
     }
 }
