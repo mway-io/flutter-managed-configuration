@@ -1,3 +1,6 @@
+## 1.1.2
+* Fix violation of performing I/O operations on main thread (strictMode) (Android) #20
+* Set compileSdk to API 36 (Android) #20
 ## 1.1.1
 * added kotlinOptions to Android build.gradle #17
 ## 1.1.0
