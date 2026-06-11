@@ -38,7 +38,7 @@ import com.google.gson.stream.JsonWriter;
  */
 public class BundleTypeAdapterFactory implements TypeAdapterFactory {
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "deprecation"})
     @Override
     public <T> TypeAdapter<T> create(final Gson gson, TypeToken<T> type) {
         if (!Bundle.class.isAssignableFrom(type.getRawType())) {
