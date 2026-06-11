@@ -1,3 +1,9 @@
+## 1.2.0
+* Fix multiple `FlutterResult` calls in Swift `getManagedConfiguration` (iOS/macOS)
+* Fix EventChannel calls from background thread on Android [#22](https://github.com/mway-io/flutter-managed-configuration/pull/22)
+* Fix AGP 9.0 incompatibility with `kotlin-android` plugin (Android) [#24](https://github.com/mway-io/flutter-managed-configuration/issues/24)
+* Add Swift Package Manager support (iOS/macOS)
+
 ## 1.1.2
 * Fix violation of performing I/O operations on main thread (strictMode) (Android) #20
 * Set compileSdk to API 36 (Android) #20
