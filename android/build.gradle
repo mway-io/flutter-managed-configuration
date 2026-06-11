@@ -22,7 +22,9 @@ rootProject.allprojects {
 }
 
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+if (!project.plugins.hasPlugin('org.jetbrains.kotlin.android')) {
+    apply plugin: 'kotlin-android'
+}
 
 android {
     if (project.android.hasProperty('namespace')) {
