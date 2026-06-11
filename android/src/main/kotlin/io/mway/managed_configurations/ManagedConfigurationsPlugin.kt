@@ -3,6 +3,8 @@ package io.mway.managed_configurations
 import android.app.Activity
 import android.content.*
 import android.util.Log
+import android.os.Handler
+import android.os.Looper
 import androidx.annotation.NonNull
 import androidx.enterprise.feedback.KeyedAppState
 import androidx.enterprise.feedback.KeyedAppStatesReporter
@@ -30,6 +32,7 @@ class ManagedConfigurationsPlugin : FlutterPlugin, MethodCallHandler, ActivityAw
     private val gson = GsonBuilder().registerTypeAdapterFactory(BundleTypeAdapterFactory())
         .create()
     private val executor = Executors.newSingleThreadExecutor()
+    private val mainHandler = Handler(Looper.getMainLooper())
 
     private var reporter: KeyedAppStatesReporter? = null
 
@@ -124,10 +127,14 @@ class ManagedConfigurationsPlugin : FlutterPlugin, MethodCallHandler, ActivityAw
         override fun onReceive(context: Context, intent: Intent) {
             getApplicationRestrictionsAsync(
                 onSuccess = { result ->
-                    eventSink?.success(result)
+                    mainHandler.post {
+                        eventSink?.success(result)
+                    }
                 },
                 onError = { e ->
-                    eventSink?.error("restrictionsReceiver", e.message, Log.getStackTraceString(e))
+                    mainHandler.post {
+                        eventSink?.error("restrictionsReceiver", e.message, Log.getStackTraceString(e))
+                    }
                 }
             )
         }
