@@ -33,8 +33,12 @@ class MethodChannelManagedConfigurations extends ManagedConfigurationsPlatform {
             .receiveBroadcastStream()
             .listen((newManagedConfigurations) {
       if (newManagedConfigurations != null) {
-        _mangedConfigurationsController
-            .add(json.decode(newManagedConfigurations));
+        try {
+          _mangedConfigurationsController
+              .add(json.decode(newManagedConfigurations));
+        } on FormatException catch (e) {
+          _mangedConfigurationsController.addError(e);
+        }
       }
     });
     return _managedConfigurationsStream;
