@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:managed_configurations/managed_configurations.dart';
 import 'package:managed_configurations/managed_configurations_platform_interface.dart';
@@ -12,10 +11,6 @@ const String reportKeyedAppState = "reportKeyedAppState";
 
 /// An implementation of [ManagedConfigurationsPlatform] that uses method channels.
 class MethodChannelManagedConfigurations extends ManagedConfigurationsPlatform {
-  /// The method channel used to interact with the native platform.
-  @visibleForTesting
-  final methodChannel = const MethodChannel('managed_configurations');
-
   static const MethodChannel _managedConfigurationMethodChannel =
       MethodChannel('managed_configurations_method');
   static const EventChannel _managedConfigurationEventChannel =
