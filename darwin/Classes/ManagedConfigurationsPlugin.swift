@@ -43,16 +43,13 @@ public class ManagedConfigurationsPlugin: NSObject, FlutterPlugin {
      If something fails returns empty json string ("{}")
      */
     private func getManagedConfiguration(result: FlutterResult){
-        if let dict = UserDefaults.standard.dictionary(forKey: "com.apple.configuration.managed"){
-            if let jsonData = try? JSONSerialization.data(withJSONObject: dict, options: .prettyPrinted){
-                if let jsonString = String(data: jsonData, encoding: .utf8) {
-                    result(jsonString)
-                }
-
-            }
+        guard let dict = UserDefaults.standard.dictionary(forKey: "com.apple.configuration.managed"),
+              let jsonData = try? JSONSerialization.data(withJSONObject: dict, options: .prettyPrinted),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
             result("{}")
+            return
         }
-        result("{}")
+        result(jsonString)
     }
     
    
