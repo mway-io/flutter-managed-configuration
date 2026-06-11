@@ -13,12 +13,9 @@ A new flutter plugin project.
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Your Company' => 'email@example.com' }
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
-  s.resource_bundles = {'package_name_privacy' => ['Resources/PrivacyInfo.xcprivacy']}
-  
-  s.platform = :ios, '9.0'
-  s.platform = :osx, '10.11'
-  # Flutter.framework does not contain a i386 slice.
+  s.source_files = 'managed_configurations/Sources/managed_configurations/**/*.swift'
+  s.resource_bundles = {'package_name_privacy' => ['managed_configurations/Sources/managed_configurations/PrivacyInfo.xcprivacy']}
+
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
   s.swift_version = '5.0'
   s.ios.dependency 'Flutter'

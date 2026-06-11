@@ -1,4 +1,5 @@
 // swift-tools-version: 5.9
+
 import PackageDescription
 
 let package = Package(
@@ -15,14 +16,8 @@ let package = Package(
         .target(
             name: "managed_configurations",
             dependencies: [],
-            path: "",
-            exclude: [
-                "managed_configurations.podspec",
-                "Assets",
-            ],
-            sources: ["Classes"],
             resources: [
-                .process("Resources/PrivacyInfo.xcprivacy"),
+                .process("PrivacyInfo.xcprivacy"),
             ]
         )
     ]
