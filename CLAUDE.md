@@ -54,7 +54,7 @@ This is a federated Flutter plugin using **method channels** and **event channel
 
 ## Lint Configuration
 
-Uses `flutter_lints` with `camel_case_types` and `non_constant_identifier_names` rules disabled (see `analysis_options.yaml`).
+Uses `lints` (recommended ruleset) with `camel_case_types` and `non_constant_identifier_names` rules disabled (see `analysis_options.yaml`).
 
 ## Known Quirk
 
