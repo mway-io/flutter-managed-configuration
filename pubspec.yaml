@@ -43,6 +43,12 @@ flutter:
       ios:
         pluginClass: ManagedConfigurationsPlugin
         sharedDarwinSource: true
+        supportedVariants:
+          - spm
+          - cocoapods
       macos:
         pluginClass: ManagedConfigurationsPlugin
         sharedDarwinSource: true
+        supportedVariants:
+          - spm
+          - cocoapods
