@@ -3,7 +3,6 @@
 * Fix EventChannel calls from background thread on Android [#22](https://github.com/mway-io/flutter-managed-configuration/pull/22)
 * Fix AGP 9.0 incompatibility with `kotlin-android` plugin (Android) [#24](https://github.com/mway-io/flutter-managed-configuration/issues/24)
 * Add Swift Package Manager support (iOS/macOS)
-* Updated min Flutter Version to 3.12.2 and Dart SDK to 3.1.0
 
 ## 1.1.2
 * Fix violation of performing I/O operations on main thread (strictMode) (Android) #20
