@@ -7,15 +7,17 @@ import 'package:flutter/services.dart';
 import 'package:managed_configurations/managed_configurations.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
-  _MyAppState createState() => _MyAppState();
+  MyAppState createState() => MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class MyAppState extends State<MyApp> {
   String _managedAppConfigurations = 'Unknown';
   final managedConfig = ManagedConfigurations();
 
@@ -59,17 +61,17 @@ class _MyAppState extends State<MyApp> {
           child: ListView(
             children: [
               ListTile(
-                title: Text('Initial managed configuration:'),
+                title: const Text('Initial managed configuration:'),
                 subtitle: Text('$_managedAppConfigurations\n'),
               ),
               StreamBuilder<Map<String, dynamic>?>(
                 stream: managedConfig.mangedConfigurationsStream,
                 builder: (context, snapshot) {
                   return ListTile(
-                      title: Text('Live managed configuraiton:'),
+                      title: const Text('Live managed configuraiton:'),
                       subtitle: snapshot.hasData
                           ? Text(json.encode(snapshot.data))
-                          : Text("No changes at the moment"));
+                          : const Text("No changes at the moment"));
                 },
               ),
               OutlinedButton(
@@ -82,12 +84,12 @@ class _MyAppState extends State<MyApp> {
                       json.encode(
                         {
                           "prop1": true,
-                          "datetime": "${DateTime.now().toIso8601String()}"
+                          "datetime": DateTime.now().toIso8601String()
                         },
                       ),
                     );
                   },
-                  child: Text("Report app state"))
+                  child: const Text("Report app state"))
             ],
           ),
         ),
